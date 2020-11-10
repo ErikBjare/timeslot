@@ -11,12 +11,15 @@ class Timeslot:
         self.start = start
         self.end = end
 
+    def __repr__(self) -> str:
+        return "<Timeslot(start={}, end={})>".format(self.start, self.end)
+
     @property
     def duration(self) -> timedelta:
         return self.end - self.start
 
     def overlaps(self, other: "Timeslot") -> bool:
-        """Checks if this timeperiod is overlapping partially or entirely with another timeperiod"""
+        """Checks if this timeslot is overlapping partially or entirely with another timeslot"""
         return (
             self.start <= other.start < self.end
             or self.start < other.end <= self.end
@@ -28,7 +31,7 @@ class Timeslot:
         return self.overlaps(other)
 
     def contains(self, other: Union[datetime, "Timeslot"]) -> bool:
-        """Checks if this timeperiod contains the entirety of another timeperiod or a datetime"""
+        """Checks if this timeslot contains the entirety of another timeslot or a datetime"""
         if isinstance(other, Timeslot):
             return self.start <= other.start and other.end <= self.end
         elif isinstance(other, datetime):
@@ -46,7 +49,7 @@ class Timeslot:
             return False
 
     def __lt__(self, other: object) -> bool:
-        # implemented to easily allow sorting of a list of timeperiods
+        # implemented to easily allow sorting of a list of timeslots
         if isinstance(other, Timeslot):
             return self.start < other.start
         else:
@@ -57,7 +60,7 @@ class Timeslot:
             )
 
     def intersection(self, other: "Timeslot") -> Optional["Timeslot"]:
-        """Returns the timeperiod contained in both periods"""
+        """Returns the timeslot contained in both slots"""
         # https://stackoverflow.com/posts/3721426/revisions
         if self.contains(other):
             # Entirety of other is within self
@@ -74,11 +77,11 @@ class Timeslot:
         return None
 
     def adjacent(self, other: "Timeslot") -> bool:
-        """Iff timeperiods are exactly next to each other, return True."""
+        """Iff timeslots are exactly next to each other, return True."""
         return self.start == other.end or self.end == other.start
 
     def gap(self, other: "Timeslot") -> Optional["Timeslot"]:
-        """If periods are separated by a non-zero gap, return the gap as a new timeperiod, else None"""
+        """If slots are separated by a non-zero gap, return the gap as a new timeslot, else None"""
         if self.end < other.start:
             return Timeslot(self.end, other.start)
         elif other.end < self.start:
