@@ -3,6 +3,8 @@ timeslot
 
 Class for working with time slots that have an arbitrary start and end.
 
+Completes the Python datetime module: datetime (a time), timedelta (a duration), timezone (an offset), **timeslot** (a range/interval).
+
 Supports operations such as: overlaps, intersects, contains, intersection, adjacent, gap, union.
 
 Initially developed as part of [aw-core](https://github.com/ActivityWatch/aw-core), and inspired by a [similar library for .NET](http://www.codeproject.com/Articles/168662/Time-Period-Library-for-NET).
