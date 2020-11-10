@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "timeslot"
+version = "0.1.0"
+description = "Data type for representing time slots with a start and end."
+authors = ["Erik Bjäreholt <erik@bjareho.lt>"]
+license = "MIT"
+packages = [
+    { include = "timeslot", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
