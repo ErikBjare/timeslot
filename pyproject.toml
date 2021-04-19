@@ -1,9 +1,11 @@
 [tool.poetry]
 name = "timeslot"
-version = "0.1.0"
+version = "0.1.2"
 description = "Data type for representing time slots with a start and end."
 authors = ["Erik Bjäreholt <erik@bjareho.lt>"]
+homepage = "https://github.com/ErikBjare/timeslot"
 license = "MIT"
+readme = "README.md"
 packages = [
     { include = "timeslot", from = "src" },
 ]

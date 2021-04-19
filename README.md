@@ -14,7 +14,41 @@ You might also be interested in [`pandas.Interval`](https://pandas.pydata.org/pa
 
 # Usage
 
-TODO
+```python
+from datetime import datetime, timedelta
+from timeslot import Timeslot
+
+now = datetime.now()
+
+slot = Timeslot(now, now + timedelta(hours=24)
+
+assert slot.duration == timedelta(hours=24)
+
+slot_large = Timeslot(now, now + timedelta(hours=24)
+slot_small = Timeslot(now, now + timedelta(hours=1))
+
+# The events definitely intersect
+assert slot_large.intersects(slot_small)
+
+# The larger even contains the smaller!
+assert slot_large.contains(slot_small)
+assert slot_small in slot_large
+
+# You can also check if a datetime is within the slot
+assert slot_large.contains(now)
+
+# The union of a slot and a contained slot is equal to the larger slot
+assert slot_large == slot_large.union(slot_small)
+
+# Intersection
+# TODO
+
+# Gap
+# TODO
+
+# Adjacent
+# TODO
+```
 
 
 # Synonyms
