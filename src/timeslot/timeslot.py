@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 
 class Timeslot:
@@ -94,3 +94,46 @@ class Timeslot:
             return Timeslot(min(self.start, other.start), max(self.end, other.end))
         else:
             raise Exception("Timeslots must not have a gap if they are to be unioned")
+
+    def sub(self, other: "Timeslot") -> List["Timeslot"]:
+        """
+        Substracts the given Timeslot from self.
+        
+        :param other: Timeslot
+        :return: List with 0-2 Timeslots
+        """
+        if not self.overlaps(other):
+            #       |-self-|
+            #  |--|          |--|
+            return [Timeslot(self.start, self.end)]
+
+        if self == other:
+            #  |-self-|
+            #  |------|
+            return []
+
+        if self in other:
+            #    |-self-|
+            #  |----------|
+            return []
+
+        if other in self:
+            #       |-self-|
+            #  |--|          |--|
+            return [Timeslot(self.start, other.start), Timeslot(other.end, self.end)]
+
+        start = self.start
+        if other.start < self.start:
+            #      |-self-|
+            #  |-----|
+            #  |-|
+            start = max(self.start, other.end)
+
+        end = self.end
+        if other.end > self.end:
+            #  |-self-|
+            #      |-----|
+            #          |-|
+            end = min(self.end, other.start)
+
+        return [Timeslot(start, end)]

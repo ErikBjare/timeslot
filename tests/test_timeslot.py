@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 import pytest
-
 from timeslot import Timeslot
 
 
@@ -114,3 +113,61 @@ def test_union():
     assert tp1 in tp_union
     assert tp2 in tp_union
     assert tp1 == tp_union
+
+
+def test_subtractions_no_overlap():
+    # adjacent but not overlapping
+    tp1 = Timeslot(datetime(2021, 6, 1, 12), datetime(2021, 6, 1, 14))
+    tp2 = Timeslot(datetime(2021, 6, 1, 14), datetime(2021, 6, 1, 16))
+    tp_sub = tp2.sub(tp1)
+    assert len(tp_sub) == 1
+    assert tp_sub[0].start == datetime(2021, 6, 1, 14)
+    assert tp_sub[0].end == datetime(2021, 6, 1, 16)
+
+
+def test_subtractions_overlap_begin():
+    # overlapping in the beginning
+    tp1 = Timeslot(datetime(2021, 6, 1, 12), datetime(2021, 6, 1, 15))
+    tp2 = Timeslot(datetime(2021, 6, 1, 14), datetime(2021, 6, 1, 16))
+    tp_sub = tp2.sub(tp1)
+    assert len(tp_sub) == 1
+    assert tp_sub[0].start == datetime(2021, 6, 1, 15)
+    assert tp_sub[0].end == datetime(2021, 6, 1, 16)
+
+
+def test_subtractions_overlap_end():
+    # overlapping in the ending
+    tp1 = Timeslot(datetime(2021, 6, 1, 15), datetime(2021, 6, 1, 17))
+    tp2 = Timeslot(datetime(2021, 6, 1, 14), datetime(2021, 6, 1, 16))
+    tp_sub = tp2.sub(tp1)
+    assert len(tp_sub) == 1
+    assert tp_sub[0].start == datetime(2021, 6, 1, 14)
+    assert tp_sub[0].end == datetime(2021, 6, 1, 15)
+
+
+def test_subtractions_subslot():
+    # tp1 contained in tp2
+    tp1 = Timeslot(datetime(2021, 6, 1, 12), datetime(2021, 6, 1, 15))
+    tp2 = Timeslot(datetime(2021, 6, 1, 11), datetime(2021, 6, 1, 16))
+    tp_sub = tp2.sub(tp1)
+    assert len(tp_sub) == 2
+    assert tp_sub[0].start == datetime(2021, 6, 1, 11)
+    assert tp_sub[0].end == datetime(2021, 6, 1, 12)
+    assert tp_sub[1].start == datetime(2021, 6, 1, 15)
+    assert tp_sub[1].end == datetime(2021, 6, 1, 16)
+
+
+def test_subtractions_wrapped():
+    # tp1 wraps t2
+    tp1 = Timeslot(datetime(2021, 6, 1, 11), datetime(2021, 6, 1, 17))
+    tp2 = Timeslot(datetime(2021, 6, 1, 12), datetime(2021, 6, 1, 16))
+    tp_sub = tp2.sub(tp1)
+    assert len(tp_sub) == 0
+
+
+def test_subtractions_matches():
+    # tp1 matches t2
+    tp1 = Timeslot(datetime(2021, 6, 1, 11), datetime(2021, 6, 1, 16))
+    tp2 = Timeslot(datetime(2021, 6, 1, 11), datetime(2021, 6, 1, 16))
+    tp_sub = tp2.sub(tp1)
+    assert len(tp_sub) == 0
