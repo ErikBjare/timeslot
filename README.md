@@ -24,7 +24,7 @@ slot = Timeslot(now, now + timedelta(hours=24)
 
 assert slot.duration == timedelta(hours=24)
 
-slot_large = Timeslot(now, now + timedelta(hours=24)
+slot_large = Timeslot(now, now + timedelta(hours=24))
 slot_small = Timeslot(now, now + timedelta(hours=1))
 
 # The events definitely intersect
